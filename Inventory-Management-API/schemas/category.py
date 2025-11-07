@@ -17,8 +17,8 @@ class CategoryUpdate(CategoryBase):
 class CategoryResponse(CategoryBase):
     id: int
 
-    class config:
-        orm = True  # Enables ORM to dict conversion for SQLAlchemy models
+    class Config:
+        orm_mode = True  # Enables ORM to dict conversion for SQLAlchemy models
 
 
 # --- Generic message response ---
