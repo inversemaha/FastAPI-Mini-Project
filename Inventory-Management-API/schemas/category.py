@@ -17,8 +17,7 @@ class CategoryUpdate(CategoryBase):
 class CategoryResponse(CategoryBase):
     id: int
 
-    class Config:
-        orm_mode = True  # Enables ORM to dict conversion for SQLAlchemy models
+    model_config = {"from_attributes": True}  # Pydantic v2: enables ORM attribute access
 
 
 # --- Generic message response ---

@@ -31,8 +31,7 @@ class ProductResponse(ProductBase):
     id: int
     category: Optional["CategoryResponse"] = None  # forward reference
 
-    class Config:
-        orm_mode = True  # Enables ORM to dict conversion for SQLAlchemy models
+    model_config = {"from_attributes": True}  # Pydantic v2: enables ORM attribute access
 
 # --- Generic message response ---
 class MessageResponse(BaseModel):
