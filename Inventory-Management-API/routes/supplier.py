@@ -52,7 +52,7 @@ def update_supplier(id: int, supplier: SupplierUpdate, db: Session = Depends(get
         return db_supplier
     except Exception:
         db.rollback()
-        raise HTTPException(status_code=500, detail="Failled to update supplier")
+        raise HTTPException(status_code=404, detail="Failled to update supplier")
 
 @router.delete("/{id}")
 def delete_supplier(id: int, db: Session = Depends(get_db)):

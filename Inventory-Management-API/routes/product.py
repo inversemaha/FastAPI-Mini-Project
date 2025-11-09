@@ -51,7 +51,7 @@ def update_product(id: int, product:ProductUpdate, db: Session = Depends(get_db)
         return db_products
     except Exception:
         db.rollback()
-        raise HTTPException(status_code=500, detail="Failled to update product")
+        raise HTTPException(status_code=404, detail="Failled to update product")
 
 @router.delete("/{id}")
 def delete_product(id: int, db: Session = Depends(get_db)):
