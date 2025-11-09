@@ -29,11 +29,10 @@ class ProductUpdate(BaseModel):
 # --- Response Schema ---
 class ProductResponse(ProductBase):
     id: int
-    category_id: int
     category: Optional["CategoryResponse"] = None  # forward reference
 
     class Config:
-        orm_mode = True # Enables ORM to dict conversion for SQLAlchemy models
+        from_attributes = True # Enables ORM to dict conversion for SQLAlchemy models
 
 # --- Generic message response ---
 class MessageResponse(BaseModel):

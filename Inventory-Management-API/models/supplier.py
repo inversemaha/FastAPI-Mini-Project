@@ -8,6 +8,7 @@ class Supplier(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
+    phone = Column(String, unique=True, nullable=False)
     contact_info = Column(String, nullable=False)
     
     #Relationship with StockEntry

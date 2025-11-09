@@ -18,7 +18,7 @@ class CategoryResponse(CategoryBase):
     id: int
 
     class Config:
-        orm_mode = True # Enables ORM to dict conversion for SQLAlchemy models
+        from_attributes = True # Enables ORM to dict conversion for SQLAlchemy models
 
 
 # --- Generic message response ---

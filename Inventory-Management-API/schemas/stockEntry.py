@@ -29,8 +29,8 @@ class StockEntryUpdate(BaseModel):
 # Response Schema
 class StockEntryResponse(BaseModel):
     id: int
-    product_id: int
-    supplier_id: int
+    # product_id: int
+    # supplier_id: int
     # quantity: int
     # unit_price: Optional[float] = None
     # due_date: Optional[datetime] = None
@@ -38,7 +38,7 @@ class StockEntryResponse(BaseModel):
     supplier: Optional["SupplierResponse"] = None
 
     class Config:
-        orm_mode =True # Enables ORM to dict conversion for SQLAlchemy models
+        from_attributes = True # Enables ORM to dict conversion for SQLAlchemy models
 
 # -- Generic Message response
 class MessageResponse(BaseModel):

@@ -21,7 +21,7 @@ def get_product_by_id(id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Product not found")
     return db_products
 
-@router.post("/", response_model=ProductCreate)
+@router.post("/", response_model=ProductResponse)
 def add_product(product: ProductCreate, db: Session = Depends(get_db)):
     # fetch product data from request body
     try:

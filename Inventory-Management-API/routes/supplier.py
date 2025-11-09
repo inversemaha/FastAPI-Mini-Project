@@ -25,10 +25,11 @@ def get_suppliers_by_id(id: int, db: Session = Depends(get_db)):
 def add_supplier(supplier: SupplierCreate, db: Session = Depends(get_db)):
     # Fetch suppliers from response body
     try:
-        db_supplier = SupplierModel(supplier.model_dump())
+        db_supplier = SupplierModel(**supplier.model_dump())
         db.add(db_supplier)
         db.commit()
         db.refresh(db_supplier)
+        return db_supplier
     except IntegrityError:
         db.rollback()
         raise HTTPException(status_code=409, detail="Supplier already exist")
@@ -48,6 +49,7 @@ def update_supplier(id: int, supplier: SupplierUpdate, db: Session = Depends(get
             setattr(db_supplier, key, value)
         db.commit()
         db.refresh(db_supplier)
+        return db_supplier
     except Exception:
         db.rollback()
         raise HTTPException(status_code=500, detail="Failled to update supplier")
