@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from config.database import engine, Base
-from routes import category, product, supplier
+from routes import category, product, supplier, stockEntry
 
 # Import models to ensure they're registered with base
 from models.category import Category
@@ -33,3 +33,4 @@ def greet():
 app.include_router(category.router)
 app.include_router(product.router)
 app.include_router(supplier.router)
+app.include_router(stockEntry.router)

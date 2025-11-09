@@ -4,6 +4,7 @@ from typing import Optional
 # --- Base Schema (common fields) ---
 class CategoryBase(BaseModel):
     name: str
+    description: Optional[str] = None
 
 # --- Create Schema ---
 class CategoryCreate(CategoryBase):
@@ -12,6 +13,7 @@ class CategoryCreate(CategoryBase):
 # --- Update Schema ---
 class CategoryUpdate(BaseModel):
     name: Optional[str] = None
+    description: Optional[str] = None
 
 # --- Response Schema ---
 class CategoryResponse(CategoryBase):

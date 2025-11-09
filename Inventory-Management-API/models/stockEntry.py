@@ -3,17 +3,16 @@ from sqlalchemy.orm import relationship
 from config.database import Base
 from datetime import datetime
 
-#Initilized StokEntry class
+# Initialize StockEntry class
 class StockEntry(Base):
     __tablename__ = "stock_entries"
 
     id = Column(Integer, primary_key=True, index=True)
-    product_id = Column(Integer, ForeignKey("products.id"),nullable=False)
-    supplier_id = Column(Integer, ForeignKey("suppliers.id"),nullable=False)
-    quantity = Column(Integer,nullable=False)
-    unit_price = Column(Float, nullable=True)
-    due_date = Column(DateTime, default=datetime.utcnow)
+    product_id = Column(Integer, ForeignKey("products.id"), nullable=False)
+    supplier_id = Column(Integer, ForeignKey("suppliers.id"), nullable=False)
+    quantity = Column(Integer, nullable=False)
+    date_added = Column(DateTime, default=datetime.utcnow)
 
-    #Relationship with Category
+    # Relationships
     product = relationship("Product", back_populates="stock_entries")
     supplier = relationship("Supplier", back_populates="stock_entries")

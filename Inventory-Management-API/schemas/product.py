@@ -3,14 +3,14 @@ from typing import Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from schemas.category import CategoryResponse
+    from schemas.supplier import SupplierResponse
 
 # --- Base Schema (common fields) ---
 class ProductBase(BaseModel):
     name: str
     sku: str
     description: Optional[str] = Field(None, max_length=1000)
-    price: float
-    quantity: int
+    unit_price: float
     category_id: int
 
 # --- Create Schema ---
@@ -22,8 +22,7 @@ class ProductUpdate(BaseModel):
     name: Optional[str] = None
     sku: Optional[str] = None
     description: Optional[str] = Field(None, max_length=1000)
-    price: Optional[float] = None
-    quantity: Optional[int] = None
+    unit_price: Optional[float] = None
     category_id: Optional[int] = None
 
 # --- Response Schema ---

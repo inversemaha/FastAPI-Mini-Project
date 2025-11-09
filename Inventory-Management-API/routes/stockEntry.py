@@ -53,7 +53,7 @@ def update_stock_entry(id: int, stock_entry: StockEntryUpdate, db: Session = Dep
         db.rollback()
         raise HTTPException(status_code=404, detail="Stock entry not found")
     
-@router.delete("/{id}", response_model=StockEntryResponse))
+@router.delete("/{id}")
 def delete_stock_entry(id: int, db: Session = Depends(get_db)):
     db_stock_entry = db.query(StockEntryModel).filter(StockEntryModel.id == id).first()
     if not db_stock_entry:
