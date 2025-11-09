@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Text, Float, ForeignKey
 from sqlalchemy.orm import relationship
-from config import Base
+from config.database import Base
 
 
 #Initilize Product class
