@@ -10,7 +10,7 @@ class ProductBase(BaseModel):
     name: str
     sku: str
     description: Optional[str] = Field(None, max_length=1000)
-    unit_price: float
+    price: float  # Standard/retail selling price
     category_id: int
 
 # --- Create Schema ---
@@ -22,7 +22,7 @@ class ProductUpdate(BaseModel):
     name: Optional[str] = None
     sku: Optional[str] = None
     description: Optional[str] = Field(None, max_length=1000)
-    unit_price: Optional[float] = None
+    price: Optional[float] = None  # Standard/retail selling price
     category_id: Optional[int] = None
 
 # --- Response Schema ---

@@ -11,6 +11,7 @@ class StockEntry(Base):
     product_id = Column(Integer, ForeignKey("products.id"), nullable=False)
     supplier_id = Column(Integer, ForeignKey("suppliers.id"), nullable=False)
     quantity = Column(Integer, nullable=False)
+    unit_price = Column(Float, nullable=False)  # Price at time of purchase
     date_added = Column(DateTime, default=datetime.utcnow)
 
     # Relationships

@@ -11,7 +11,7 @@ class Product(Base):
     name = Column(String, nullable=False)
     sku = Column(String, unique=True, nullable=False)
     description = Column(Text, nullable=True)
-    unit_price = Column(Float, nullable=False)
+    price = Column(Float, nullable=False)  # Standard/retail selling price
     category_id = Column(Integer, ForeignKey("categories.id"), nullable=False)
 
     # Relationship with Category

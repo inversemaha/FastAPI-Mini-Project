@@ -11,6 +11,7 @@ class StockEntryBase(BaseModel):
     product_id: int
     supplier_id: int
     quantity: int
+    unit_price: float
     date_added: Optional[datetime] = None
 
 # Create Schema
@@ -22,6 +23,7 @@ class StockEntryUpdate(BaseModel):
     product_id: Optional[int] = None
     supplier_id: Optional[int] = None
     quantity: Optional[int] = None
+    unit_price: Optional[float] = None
     date_added: Optional[datetime] = None
 
 # Response Schema
