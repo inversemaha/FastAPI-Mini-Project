@@ -8,8 +8,8 @@ class StockEntry(Base):
     __tablename__ = "stock_entries"
 
     id = Column(Integer, primary_key=True, index=True)
-    product_id = Column(Integer, ForeignKey("products_id"),nullable=False)
-    supplier_id = Column(Integer, ForeignKey("suppliers_id"),nullable=False)
+    product_id = Column(Integer, ForeignKey("products.id"),nullable=False)
+    supplier_id = Column(Integer, ForeignKey("suppliers.id"),nullable=False)
     quantity = Column(Integer,nullable=False)
     unit_price = Column(Float, nullable=True)
     due_date = Column(DateTime, default=datetime.utcnow)

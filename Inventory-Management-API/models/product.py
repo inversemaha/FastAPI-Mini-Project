@@ -17,3 +17,6 @@ class Product(Base):
 
     #Relationship with Category
     category = relationship("Category", back_populates="products")
+    
+    #Relationship with StockEntry
+    stock_entries = relationship("StockEntry", back_populates="product")

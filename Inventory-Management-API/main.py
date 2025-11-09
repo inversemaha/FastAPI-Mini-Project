@@ -6,6 +6,7 @@ from routes import category, product, supplier
 from models.category import Category
 from models.product import Product
 from models.supplier import Supplier
+from models.stockEntry import StockEntry
 
 # Create all tables in correct order (Base knows the dependencies)
 Base.metadata.create_all(bind=engine)
@@ -14,9 +15,11 @@ Base.metadata.create_all(bind=engine)
 from schemas.category import CategoryResponse
 from schemas.product import ProductResponse
 from schemas.supplier import SupplierResponse
+from schemas.stockEntry import StockEntryResponse
 CategoryResponse.model_rebuild()
 ProductResponse.model_rebuild()
 SupplierResponse.model_rebuild()
+StockEntryResponse.model_rebuild()
 
 #initilize FastAPI app
 app = FastAPI()
