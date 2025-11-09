@@ -29,9 +29,11 @@ class ProductUpdate(BaseModel):
 # --- Response Schema ---
 class ProductResponse(ProductBase):
     id: int
+    category_id: int
     category: Optional["CategoryResponse"] = None  # forward reference
 
-    model_config = {"from_attributes": True}  # Pydantic v2: enables ORM attribute access
+    class Config:
+        orm_mode = True # Enables ORM to dict conversion for SQLAlchemy models
 
 # --- Generic message response ---
 class MessageResponse(BaseModel):

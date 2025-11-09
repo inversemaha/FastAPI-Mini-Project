@@ -10,14 +10,15 @@ class CategoryCreate(CategoryBase):
     pass
 
 # --- Update Schema ---
-class CategoryUpdate(CategoryBase):
+class CategoryUpdate(BaseModel):
     name: Optional[str] = None
 
 # --- Response Schema ---
 class CategoryResponse(CategoryBase):
     id: int
 
-    model_config = {"from_attributes": True}  # Pydantic v2: enables ORM attribute access
+    class Config:
+        orm_mode = True # Enables ORM to dict conversion for SQLAlchemy models
 
 
 # --- Generic message response ---
