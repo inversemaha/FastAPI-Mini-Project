@@ -13,6 +13,9 @@ class Book(Base):
     publication_year = Column(Integer, nullable=False)
 
     #Relationship with Author & Genre
-    author = relationship("Author", back_populates="books")
-    genre = relationship("Genre", back_populates="books")
-    borrow_records = relationship("BorrowRecord", back_populates="books")
+    author = relationship("Author", back_populates="books")  # N:1 relationship
+    genre = relationship("Genre", back_populates="books")  # N:1 relationship
+    borrow_records = relationship("BorrowRecord", back_populates="book", cascade="all, delete-orphan")  # 1:N relationship
+
+    def __repr__(self):
+        return f"<Book(id={self.id}, title='{self.title}')>"

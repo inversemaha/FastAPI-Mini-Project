@@ -1,5 +1,8 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import List, Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from schemas.book import BookResponse
 
 # Base Schema
 class AuthorBase(BaseModel):
@@ -18,9 +21,12 @@ class AuthorUpdate(BaseModel):
 #--- Response Schema -----
 class AuthorResponse(AuthorBase):
     id: int
+    books: List["BookResponse"] = [] # 1:N relationship
 
     class Config:
         from_attributes = True # Enables ORM to dict conversion for SQLAlchemy models
+
+AuthorResponse.model_rebuild()
 
 # --- Generic message response ---
 class MessageResponse(BaseModel):

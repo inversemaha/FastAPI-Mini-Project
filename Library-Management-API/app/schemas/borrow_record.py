@@ -32,6 +32,8 @@ class BorrowRecordResponse(BorrowRecordBase):
     class Config:
         from_attributes = True  # Enables ORM to dict conversion for SQLAlchemy models
 
+BorrowRecordResponse.model_rebuild()
+
 # Generic Message Response
 class MessageResponse(BaseModel):
     message: str

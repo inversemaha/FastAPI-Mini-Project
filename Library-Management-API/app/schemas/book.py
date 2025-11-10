@@ -1,10 +1,11 @@
 from pydantic import BaseModel
-from typing import Optional, TYPE_CHECKING
+from typing import List, Optional, TYPE_CHECKING
 
 #Tyoe Cheking for Circular Relationship issue
 if TYPE_CHECKING:
     from schemas.author import AuthorResponse
     from schemas.genre import GenreResponse
+    from schemas.borrow_record import BorrowRecordResponse
 
 #Base Schema
 class BookBase(BaseModel):
@@ -25,13 +26,16 @@ class BookUpdate(BaseModel):
     publication_year: Optional[int] = None
 
 #Response Schema
-class BookResponse(BaseModel):
+class BookResponse(BookBase):
     id: int
-    author: Optional["AuthorResponse"] = None  # Fowarad Reffrence
-    genre: Optional["GenreResponse"] = None  # Fowared Reffrence
+    author: Optional["AuthorResponse"] = None  # N:1 Forward Reference
+    genre: Optional["GenreResponse"] = None  # N:1 Forward Reference
+    borrow_records: List["BorrowRecordResponse"] = []  # 1:N relationship
 
     class Config:
-        from_attributs = True  # Enables ORM to dict conversion for SQLAlchemy models
+        from_attributes = True  # Enables ORM to dict conversion for SQLAlchemy models
+
+BookResponse.model_rebuild()
 
 # Generic Message Response
 class MessageResponse(BaseModel):
