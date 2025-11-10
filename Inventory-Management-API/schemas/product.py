@@ -3,8 +3,7 @@ from typing import Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from schemas.category import CategoryResponse
-    from schemas.supplier import SupplierResponse
-
+    
 # --- Base Schema (common fields) ---
 class ProductBase(BaseModel):
     name: str
