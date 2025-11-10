@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
-from config.database import Base
+from app.config.database import Base
 
 class Genre(Base):
     __tablename__ = "genres"

@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
-from config.database import Base
+from app.config.database import Base
 from datetime import datetime
 
 class BorrowRecord(Base):
@@ -13,7 +13,7 @@ class BorrowRecord(Base):
     return_date = Column(DateTime, nullable=True)
 
     #Relationship with Book
-    books = relationship("Book", back_populates="borrow_records") # N:1 relationship
+    book = relationship("Book", back_populates="borrow_records") # N:1 relationship
 
     def __repr__(self):
         return f"<BorrowRecord(id={self.id}, borrower='{self.borrower_name}', book_id={self.book_id})>"
