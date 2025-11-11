@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session, joinedload
+from sqlalchemy.orm import Session, joinedload, Query
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import or_, and_
+from typing import List
 
 from app.config.database import get_db
 from app.models.book import Book as BookModel
@@ -15,7 +16,7 @@ router = APIRouter(prefix="/books", tags=["Books"])
 # CRUD Endpoints
 # ----------------------
 # Get all books (with pagination)
-@router.get("/", response_model=list[BookResponse])
+@router.get("/", response_model=List[BookResponse])
 def get_all_books(skip: int=0, limit: int=10, db: Session = Depends(get_db)):
     books = (db.query(BookModel)
              .options(joinedload(BookModel.author), joinedload(BookModel.genre))

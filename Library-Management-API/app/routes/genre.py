@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, Query
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import or_
+from typing import List
 
 from app.config.database import get_db
 from app.models.genre import Genre as GenreModel
@@ -13,7 +14,7 @@ router = APIRouter(prefix="/genres", tags=["Genres"])
 # CRUD Endpoints
 # ----------------------
 # Get all genres (with pagination)
-@router.get("/", response_model=list[GenreResponse])
+@router.get("/", response_model=List[GenreResponse])
 def get_all_genres(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     genres = db.query(GenreModel).offset(skip).limit(limit).all()
     if not genres:

@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session, joinedload
+from sqlalchemy.orm import Session, joinedload, Query
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import or_, and_
+from typing import List
 
 from app.config.database import get_db
 from app.models.borrow_record import BorrowRecord as BorrowRecordModel
@@ -19,7 +20,7 @@ router = APIRouter(prefix="/borrow-records", tags=["Borrow Records"])
 # CRUD Endpoints
 # ----------------------
 # Get all borrower records (with pagination)
-@router.get("/", response_model=list[BorrowRecordResponse])
+@router.get("/", response_model=List[BorrowRecordResponse])
 def get_all_borrow_records(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     records = (db.query(BorrowRecordModel)
                .options(joinedload(BorrowRecordModel.book))

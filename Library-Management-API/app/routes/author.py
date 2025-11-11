@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, Query
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import or_
+from typing import List
 
 from app.config.database import get_db
 from app.models.author import Author as AuthorModel
@@ -14,7 +15,7 @@ router = APIRouter(prefix="/authors", tags=["Authors"])
 # ----------------------
 
 # Gel all authors (with pagination)
-@router.get("/", response_model=list[AuthorResponse])
+@router.get("/", response_model=List[AuthorResponse])
 def get_all_authors(skip: int=0, limit: int=10, db: Session = Depends(get_db)):
     author = db.query(AuthorModel).offset(skip).limit(limit).all()
     if not author:
