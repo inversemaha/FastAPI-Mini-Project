@@ -39,5 +39,4 @@ class BookResponse(BookBase):
 class MessageResponse(BaseModel):
     message: str
 
-# Move model_rebuild() after all classes are defined
-BookResponse.model_rebuild()
+# Note: Using schema registry pattern for model rebuilding

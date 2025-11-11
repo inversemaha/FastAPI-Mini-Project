@@ -21,8 +21,8 @@ class BorrowRecordCreate(BorrowRecordBase):
 class BorrowRecordUpdate(BaseModel):
     book_id: Optional[int] = None
     borrower_name: Optional[str] = None
-    borrow_date: Optional[int] = None
-    return_date: Optional[int] = None
+    borrow_date: Optional[datetime] = None
+    return_date: Optional[datetime] = None
 
 # Response Schema
 class BorrowRecordResponse(BorrowRecordBase):
@@ -36,5 +36,5 @@ class BorrowRecordResponse(BorrowRecordBase):
 class MessageResponse(BaseModel):
     message: str
 
-# Move model_rebuild() after all classes are defined
-BorrowRecordResponse.model_rebuild()
+# Note: model_rebuild() removed to avoid circular dependency issues
+# Forward references with quotes should work automatically

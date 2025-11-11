@@ -28,5 +28,5 @@ class GenreResponse(GenreBase):
 class MessageResponse(BaseModel):
     message: str
 
-# Move model_rebuild() after all classes are defined
-GenreResponse.model_rebuild()
+# Note: model_rebuild() removed to avoid circular dependency issues
+# Forward references with quotes should work automatically

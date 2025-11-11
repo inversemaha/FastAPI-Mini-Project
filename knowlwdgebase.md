@@ -8,3 +8,5 @@
 # Enables ORM to dict conversion for SQLAlchemy models
 # setattr
 # db.rollback()
+# response_model
+# FastAPI Relationship
