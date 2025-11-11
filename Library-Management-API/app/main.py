@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routes import author, book, borrow_record, genre
+from app.routes import author
 
 # Initilize FastAPI
 app = FastAPI()
@@ -9,3 +9,4 @@ def greet():
     return " This Text is for Test"
 
 #Register Route under main.py
+app.include_router(author.router)

@@ -2,9 +2,9 @@ from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional, TYPE_CHECKING
 
-# Type Cheking for circular Relationship issue
+# Type Checking for circular Relationship issue
 if TYPE_CHECKING:
-    from schemas.book import BookResponse
+    from .book import BookResponse
 
 #Base Schema
 class BorrowRecordBase(BaseModel):
@@ -32,8 +32,9 @@ class BorrowRecordResponse(BorrowRecordBase):
     class Config:
         from_attributes = True  # Enables ORM to dict conversion for SQLAlchemy models
 
-BorrowRecordResponse.model_rebuild()
-
 # Generic Message Response
 class MessageResponse(BaseModel):
     message: str
+
+# Move model_rebuild() after all classes are defined
+BorrowRecordResponse.model_rebuild()

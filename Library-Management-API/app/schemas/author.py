@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import List, Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from schemas.book import BookResponse
+    from .book import BookResponse
 
 # Base Schema
 class AuthorBase(BaseModel):
@@ -26,8 +26,9 @@ class AuthorResponse(AuthorBase):
     class Config:
         from_attributes = True # Enables ORM to dict conversion for SQLAlchemy models
 
-AuthorResponse.model_rebuild()
-
 # --- Generic message response ---
 class MessageResponse(BaseModel):
     message: str
+
+# Note: model_rebuild() removed to avoid circular dependency issues
+# Forward references with quotes should work automatically
