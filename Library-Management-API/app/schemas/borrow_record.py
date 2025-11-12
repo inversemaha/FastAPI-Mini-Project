@@ -1,17 +1,12 @@
 from pydantic import BaseModel
 from datetime import datetime
-from typing import Optional, TYPE_CHECKING
-
-# Type Checking for circular Relationship issue
-if TYPE_CHECKING:
-    from .book import BookResponse
 
 #Base Schema
 class BorrowRecordBase(BaseModel):
     book_id: int
     borrower_name: str
     borrow_date: datetime
-    return_date: Optional[datetime] = None
+    return_date: datetime | None = None
 
 #Create Schema
 class BorrowRecordCreate(BorrowRecordBase):
@@ -19,16 +14,15 @@ class BorrowRecordCreate(BorrowRecordBase):
 
 #Update Schema
 class BorrowRecordUpdate(BaseModel):
-    book_id: Optional[int] = None
-    borrower_name: Optional[str] = None
-    borrow_date: Optional[datetime] = None
-    return_date: Optional[datetime] = None
+    book_id: int | None = None
+    borrower_name: str | None = None
+    borrow_date: datetime | None = None
+    return_date: datetime | None = None
 
 # Response Schema
 class BorrowRecordResponse(BorrowRecordBase):
     id: int
-    book: Optional["BookResponse"] = None
-
+    
     class Config:
         from_attributes = True  # Enables ORM to dict conversion for SQLAlchemy models
 

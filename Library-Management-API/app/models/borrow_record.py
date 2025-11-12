@@ -12,8 +12,5 @@ class BorrowRecord(Base):
     borrow_date = Column(DateTime, default=datetime.utcnow, nullable=False)
     return_date = Column(DateTime, nullable=True)
 
-    #Relationship with Book
-    book = relationship("Book", back_populates="borrow_records") # N:1 relationship
-
     def __repr__(self):
         return f"<BorrowRecord(id={self.id}, borrower='{self.borrower_name}', book_id={self.book_id})>"

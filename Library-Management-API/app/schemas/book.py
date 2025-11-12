@@ -1,11 +1,11 @@
 from pydantic import BaseModel
-from typing import List, Optional, TYPE_CHECKING
+from datetime import datetime
+from typing import TYPE_CHECKING
 
-#Type Checking for Circular Relationship issue
+# Type checking for relationships
 if TYPE_CHECKING:
     from .author import AuthorResponse
     from .genre import GenreResponse
-    from .borrow_record import BorrowRecordResponse
 
 #Base Schema
 class BookBase(BaseModel):
@@ -20,17 +20,16 @@ class BookCreate(BookBase):
 
 #Update Schema
 class BookUpdate(BaseModel):
-    title: Optional[str] = None
-    author_id: Optional[int] = None
-    genre_id: Optional[int] = None
-    publication_year: Optional[int] = None
+    title: str | None = None
+    author_id: int | None = None
+    genre_id: int | None = None
+    publication_year: int | None = None
 
 #Response Schema
 class BookResponse(BookBase):
     id: int
-    author: Optional["AuthorResponse"] = None  # N:1 Forward Reference
-    genre: Optional["GenreResponse"] = None  # N:1 Forward Reference
-    borrow_records: List["BorrowRecordResponse"] = []  # 1:N relationship
+    author: "AuthorResponse | None" = None  # N:1 Forward Reference
+    genre: "GenreResponse | None" = None  # N:1 Forward Reference
 
     class Config:
         from_attributes = True  # Enables ORM to dict conversion for SQLAlchemy models

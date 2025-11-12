@@ -12,10 +12,9 @@ class Book(Base):
     genre_id = Column(Integer, ForeignKey("genres.id"), nullable=False)
     publication_year = Column(Integer, nullable=False)
 
-    #Relationship with Author & Genre
-    author = relationship("Author", back_populates="books")  # N:1 relationship
-    genre = relationship("Genre", back_populates="books")  # N:1 relationship
-    borrow_records = relationship("BorrowRecord", back_populates="book", cascade="all, delete-orphan")  # 1:N relationship
+    # Relationships
+    author = relationship("Author")  # N:1 relationship - Book → Author
+    genre = relationship("Genre")   # N:1 relationship - Book → Genre
 
     def __repr__(self):
         return f"<Book(id={self.id}, title='{self.title}')>"

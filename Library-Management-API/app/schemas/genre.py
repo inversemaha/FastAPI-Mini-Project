@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .book import BookResponse
@@ -14,12 +14,11 @@ class GenreCreate(GenreBase):
 
 #Update Schema
 class GenreUpdate(BaseModel):
-    name: Optional[str] = None
+    name: str | None = None
 
 #Response Schema
 class GenreResponse(GenreBase):
     id: int
-    books: List["BookResponse"] = [] # 1:N relationship
 
     class Config:
         from_attributes = True # Enables ORM to dict conversion for SQLAlchemy models

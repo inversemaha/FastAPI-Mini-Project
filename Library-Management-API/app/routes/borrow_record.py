@@ -22,12 +22,7 @@ router = APIRouter(prefix="/borrow-records", tags=["Borrow Records"])
 # Get all borrower records (with pagination)
 @router.get("/", response_model=List[BorrowRecordResponse])
 def get_all_borrow_records(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    records = (db.query(BorrowRecordModel)
-               .options(joinedload(BorrowRecordModel.book))
-               .offset(skip)
-               .limit(limit)
-               .all()
-               )
+    records = db.query(BorrowRecordModel).offset(skip).limit(limit).all()
     if not records:
         raise HTTPException(status_code=404, detail="No borrow records found")
     return records
@@ -35,16 +30,19 @@ def get_all_borrow_records(skip: int = 0, limit: int = 10, db: Session = Depends
 # Get borrower record by ID
 @router.get("/{record_id}", response_model=BorrowRecordResponse)
 def get_borrow_record(record_id: int, db: Session = Depends(get_db)):
-    record = (db.query(BorrowRecordModel)
-              .options(joinedload(BorrowRecordModel.book))
-              .filter(BorrowRecordModel.id == record_id)
-              .first())
+    record = db.query(BorrowRecordModel).filter(BorrowRecordModel.id == record_id).first()
     if not record:
         raise HTTPException(status_code=404, detail="Borrow record not found")
     return record
 
 # Create a new borrower record
+@router.post("/", response_model=BorrowRecordResponse)
 def create_borrow_record(record: BorrowRecordCreate, db: Session = Depends(get_db)):
+    # Validate book exists
+    book = db.query(BookModel).filter(BookModel.id == record.book_id).first()
+    if not book:
+        raise HTTPException(status_code=404, detail="Book not found")
+    
     try:
         db_record = BorrowRecordModel(**record.model_dump())
         db.add(db_record)
