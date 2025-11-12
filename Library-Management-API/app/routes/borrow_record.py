@@ -38,10 +38,22 @@ def get_borrow_record(record_id: int, db: Session = Depends(get_db)):
 # Create a new borrower record
 @router.post("/", response_model=BorrowRecordResponse)
 def create_borrow_record(record: BorrowRecordCreate, db: Session = Depends(get_db)):
-    # Validate book exists
     book = db.query(BookModel).filter(BookModel.id == record.book_id).first()
     if not book:
         raise HTTPException(status_code=404, detail="Book not found")
+    
+    # Check if copies are available
+    active_borrows_count = (db.query(BorrowRecordModel)
+                           .filter(BorrowRecordModel.book_id == record.book_id)
+                           .filter(BorrowRecordModel.return_date.is_(None))
+                           .count())
+    
+    available_copies = book.total_copies - active_borrows_count
+    if available_copies <= 0:
+        raise HTTPException(
+            status_code=400, 
+            detail=f"No copies available. Total: {book.total_copies}, Currently borrowed: {active_borrows_count}"
+        )
     
     try:
         db_record = BorrowRecordModel(**record.model_dump())

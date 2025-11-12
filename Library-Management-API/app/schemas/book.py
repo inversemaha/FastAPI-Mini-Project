@@ -13,6 +13,7 @@ class BookBase(BaseModel):
     author_id: int
     genre_id: int
     publication_year: int
+    total_copies: int = 1  # Default to 1 copy
 
 #Create Schema
 class BookCreate(BookBase):
@@ -24,15 +25,18 @@ class BookUpdate(BaseModel):
     author_id: int | None = None
     genre_id: int | None = None
     publication_year: int | None = None
+    total_copies: int | None = None
 
 #Response Schema
 class BookResponse(BookBase):
     id: int
-    author: "AuthorResponse | None" = None  # N:1 Forward Reference
-    genre: "GenreResponse | None" = None  # N:1 Forward Reference
+    author: "AuthorResponse | None" = None
+    genre: "GenreResponse | None" = None
+    available_copies: int = 0  # Will be calculated in routes
+    is_available: bool = False  # Will be calculated in routes
 
     class Config:
-        from_attributes = True  # Enables ORM to dict conversion for SQLAlchemy models
+        from_attributes = True
 
 # Generic Message Response
 class MessageResponse(BaseModel):

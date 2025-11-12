@@ -18,47 +18,74 @@ router = APIRouter(prefix="/books", tags=["Books"])
 # Get all books (with pagination)
 @router.get("/", response_model=List[BookResponse])
 def get_all_books(skip: int=0, limit: int=10, db: Session = Depends(get_db)):
+    from app.models.borrow_record import BorrowRecord as BorrowRecordModel
+    
     books = (db.query(BookModel)
              .options(joinedload(BookModel.author), joinedload(BookModel.genre))
              .offset(skip).limit(limit)
              .all())
     if not books:        
         raise HTTPException(status_code=404, detail="No books found")
-    return books
+    
+    # Calculate available copies for each book
+    result = []
+    for book in books:
+        # Count active borrows (unreturned books)
+        active_borrows_count = (db.query(BorrowRecordModel)
+                               .filter(BorrowRecordModel.book_id == book.id)
+                               .filter(BorrowRecordModel.return_date.is_(None))
+                               .count())
+        
+        available_copies = book.total_copies - active_borrows_count
+        
+        book_data = {
+            "id": book.id,
+            "title": book.title,
+            "author_id": book.author_id,
+            "genre_id": book.genre_id,
+            "publication_year": book.publication_year,
+            "total_copies": book.total_copies,
+            "author": book.author,
+            "genre": book.genre,
+            "available_copies": available_copies,
+            "is_available": available_copies > 0
+        }
+        result.append(book_data)
+    
+    return result
 
 # Get a single book by ID (with relationships)
 @router.get("/{book_id}", response_model=BookResponse)
 def get_book(book_id: int, db: Session = Depends(get_db)):
+    from app.models.borrow_record import BorrowRecord as BorrowRecordModel
+    
     book = (db.query(BookModel)
-            .options(joinedload(BookModel.author), 
-                    joinedload(BookModel.genre),
-                    joinedload(BookModel.borrow_records))
+            .options(joinedload(BookModel.author), joinedload(BookModel.genre))
             .filter(BookModel.id == book_id)
             .first()
             )
     if not book:
         raise HTTPException(status_code=404, detail="Book not found")
     
-    # Manual serialization to prevent recursion
+    # Calculate available copies
+    active_borrows_count = (db.query(BorrowRecordModel)
+                           .filter(BorrowRecordModel.book_id == book_id)
+                           .filter(BorrowRecordModel.return_date.is_(None))
+                           .count())
+    
+    available_copies = book.total_copies - active_borrows_count
+    
     return {
         "id": book.id,
         "title": book.title,
         "author_id": book.author_id,
         "genre_id": book.genre_id,
         "publication_year": book.publication_year,
+        "total_copies": book.total_copies,
         "author": book.author,
         "genre": book.genre,
-        "borrow_records": [
-            {
-                "id": record.id,
-                "book_id": record.book_id,
-                "borrower_name": record.borrower_name,
-                "borrow_date": record.borrow_date,
-                "return_date": record.return_date,
-                "book": None  # Prevent recursion
-            }
-            for record in book.borrow_records
-        ]
+        "available_copies": available_copies,
+        "is_available": available_copies > 0
     }
 
 # Create a new book
@@ -77,11 +104,9 @@ def create_book(book: BookCreate, db: Session = Depends(get_db)):
         db.commit()
         db.refresh(db_book)
         
-        # Load relationships for response and prevent recursion
+        # Load relationships for response
         db_book = (db.query(BookModel)
-                  .options(joinedload(BookModel.author), 
-                          joinedload(BookModel.genre),
-                          joinedload(BookModel.borrow_records))
+                  .options(joinedload(BookModel.author), joinedload(BookModel.genre))
                   .filter(BookModel.id == db_book.id)
                   .first())
         
@@ -91,9 +116,11 @@ def create_book(book: BookCreate, db: Session = Depends(get_db)):
             "author_id": db_book.author_id,
             "genre_id": db_book.genre_id,
             "publication_year": db_book.publication_year,
+            "total_copies": db_book.total_copies,
             "author": db_book.author,
             "genre": db_book.genre,
-            "borrow_records": []  # New book has no borrows yet
+            "available_copies": db_book.total_copies,  # New book, all copies available
+            "is_available": True
         }
     except IntegrityError:
         db.rollback()
@@ -115,13 +142,20 @@ def update_book(book_id: int, book: BookUpdate, db: Session = Depends(get_db)):
         db.commit()
         db.refresh(db_book)
         
-        # Load relationships for response and prevent recursion
+        # Load relationships and calculate availability
+        from app.models.borrow_record import BorrowRecord as BorrowRecordModel
+        
         db_book = (db.query(BookModel)
-                  .options(joinedload(BookModel.author), 
-                          joinedload(BookModel.genre),
-                          joinedload(BookModel.borrow_records))
+                  .options(joinedload(BookModel.author), joinedload(BookModel.genre))
                   .filter(BookModel.id == book_id)
                   .first())
+        
+        active_borrows_count = (db.query(BorrowRecordModel)
+                               .filter(BorrowRecordModel.book_id == book_id)
+                               .filter(BorrowRecordModel.return_date.is_(None))
+                               .count())
+        
+        available_copies = db_book.total_copies - active_borrows_count
         
         return {
             "id": db_book.id,
@@ -129,19 +163,11 @@ def update_book(book_id: int, book: BookUpdate, db: Session = Depends(get_db)):
             "author_id": db_book.author_id,
             "genre_id": db_book.genre_id,
             "publication_year": db_book.publication_year,
+            "total_copies": db_book.total_copies,
             "author": db_book.author,
             "genre": db_book.genre,
-            "borrow_records": [
-                {
-                    "id": record.id,
-                    "book_id": record.book_id,
-                    "borrower_name": record.borrower_name,
-                    "borrow_date": record.borrow_date,
-                    "return_date": record.return_date,
-                    "book": None  # Prevent recursion
-                }
-                for record in db_book.borrow_records
-            ]
+            "available_copies": available_copies,
+            "is_available": available_copies > 0
         }
     except Exception:
         db.rollback()
