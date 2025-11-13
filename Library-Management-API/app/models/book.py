@@ -11,7 +11,7 @@ class Book(Base):
     author_id = Column(Integer, ForeignKey("authors.id"), nullable=False)
     genre_id = Column(Integer, ForeignKey("genres.id"), nullable=False)
     publication_year = Column(Integer, nullable=False)
-    total_copies = Column(Integer, nullable=False, default=1)  # Total number of copies
+    total_copies = Column(Integer, nullable=False, default=1, server_default="1")  # Total number of copies
 
     # Relationships
     author = relationship("Author")  # N:1 relationship - Book → Author
